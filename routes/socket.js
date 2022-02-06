@@ -2,7 +2,7 @@ const WebSocket = require("ws");
 const wsModule = require("ws");
 
 module.exports = (server) => {
-  const wss = new WebSocket.Server({ server });
+  const clientWss = new WebSocket.Server({ server });
   const bithumbWs = new wsModule("wss://pubwss.bithumb.com/pub/ws");
   let coinInfo = null;
 
@@ -13,7 +13,7 @@ module.exports = (server) => {
   };
   const subscribeData = JSON.stringify(requestData);
 
-  bithumbWs.onopen = () => {
+  bithumbWs.onopen = (ws) => {
     bithumbWs.send(subscribeData);
   };
 
@@ -21,7 +21,7 @@ module.exports = (server) => {
     coinInfo = event.data;
   };
 
-  wss.on("clientConnection", (ws) => {
+  clientWss.on("connection", (ws, request) => {
     ws.on("message", (message) => {
       console.log("클라이언트에서 보내온 메세지:::", message.toString("utf8"));
     });
