@@ -6,7 +6,6 @@ const cors = require("cors");
 
 const join = require("./routes/join");
 const users = require("./routes/users");
-// const socket = require("./socket");
 
 const app = express();
 
@@ -24,7 +23,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", join);
 app.use("/users", users);
-// app.use("/socket", socket);
 
 app.use(function (req, res, next) {
   next(createError(404));
