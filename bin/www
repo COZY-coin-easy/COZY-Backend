@@ -1,13 +1,27 @@
 const app = require('../app');
 const debug = require('debug')('cozyback:server');
 const http = require('http');
+// const wsModule = require('ws');
 
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 const server = http.createServer(app);
+const mySocket = require('../routes/socket');
+mySocket(server.listen(port));
 
-server.listen(port);
+// const webSocket = new wsModule('wss://pubwss.bithumb.com/pub/ws');
+
+// webSocket.onopen = () => {
+//   console.log('빗썸과 연결 성공');
+// };
+
+// webSocket.onmessage = (event) => {
+//   console.log('빗썸의 답:::', event.data);
+// };
+
+
+// server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
