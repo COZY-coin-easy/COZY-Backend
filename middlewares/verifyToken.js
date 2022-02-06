@@ -8,6 +8,7 @@ async function verifyToken(req, res, next) {
 
     if (decode) {
       req.user = decode;
+
       next();
     } else {
       return res.send({ message: "Un authorize" });
