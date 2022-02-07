@@ -5,6 +5,10 @@ const path = require("path");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
+mongoose.connect(process.env.MONGO_URL, {
+  useNewUrlParser: true,
+});
+
 const join = require("./routes/join");
 const users = require("./routes/users");
 
@@ -21,10 +25,6 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: 5000000 }));
 app.use(express.urlencoded({ limit: 5000000, extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
-
-mongoose.connect(process.env.MONGO_URL, {
-  useNewUrlParser: true,
-});
 
 app.use("/", join);
 app.use("/users", users);
