@@ -3,8 +3,7 @@ const router = express.Router();
 const User = require("../models/User");
 
 router.post("/candlestick", async function (req, res, next) {
-  const candlestick = req.body.headers.candlestick;
-  const email = req.body.headers.email;
+  const { candlestick, email } = req.body.headers;
 
   try {
     await User.findOneAndUpdate({ email }, { candlestick });
