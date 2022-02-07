@@ -2,6 +2,8 @@ require("dotenv").config();
 const createError = require("http-errors");
 const express = require("express");
 const path = require("path");
+const cors = require("cors");
+const mongoose = require("mongoose");
 
 const join = require("./routes/join");
 const users = require("./routes/users");
@@ -11,9 +13,18 @@ const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true,
+};
+app.use(cors(corsOptions));
+app.use(express.json({ limit: 5000000 }));
+app.use(express.urlencoded({ limit: 5000000, extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+
+mongoose.connect(process.env.MONGO_URL, {
+  useNewUrlParser: true,
+});
 
 app.use("/", join);
 app.use("/users", users);
@@ -31,4 +42,3 @@ app.use(function (err, req, res, next) {
 });
 
 module.exports = app;
-//develop 브랜치 생성
