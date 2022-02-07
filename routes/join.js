@@ -1,36 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const verifyIdToken = require("../middlewares/verifyToken");
 
 const User = require("../models/User");
-
-router.get("/", verifyIdToken, async function (req, res, next) {
-  const { email } = req.user;
-
-  try {
-    const user = await User.findOne({ email }).lean().exec();
-
-    if (user) {
-      return res.status(200).send({ result: "success" });
-    } else {
-      return res.status(200).send({ result: "Not exist user" });
-    }
-  } catch (err) {
-    next(err);
-  }
-});
 
 router.post("/", async function (req, res, next) {
   const { email, username } = req.body;
 
   try {
-    const user = await User.findOne({ email }).lean();
+    const user = await User.findOne({ email }).lean().exec();
 
     if (user) {
-      return res.status(201).send({ message: "존재하는 유저입니다." });
+      return res.status(201).send({ result: "로그인 성공" });
     }
 
-    res.status(201).send({ result: "success" });
+    res.status(201).send({ result: "유저 등록 성공" });
 
     await User.create({
       email,
