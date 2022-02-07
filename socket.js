@@ -16,7 +16,6 @@ module.exports = (server) => {
           );
           if (response.status === 200) {
             coinInfo = response.data;
-            console.log("@@@", response.data);
           }
         } catch (error) {
           console.error(error);

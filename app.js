@@ -21,10 +21,9 @@ const corsOptions = {
   origin: "http://localhost:3000",
   credentials: true,
 };
-
 app.use(cors(corsOptions));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({ limit: 5000000 }));
+app.use(express.urlencoded({ limit: 5000000, extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", join);
