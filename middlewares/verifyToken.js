@@ -11,7 +11,7 @@ async function verifyToken(req, res, next) {
 
       next();
     } else {
-      return res.send({ message: "Un authorize" });
+      return res.send({ message: "유효하지 않은 토큰입니다." });
     }
   } catch (err) {
     next(err);
