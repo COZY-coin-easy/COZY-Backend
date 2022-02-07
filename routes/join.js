@@ -6,7 +6,6 @@ const User = require("../models/User");
 router.post("/", async function (req, res, next) {
   const { email, username } = req.body;
 
-  console.log(email);
   try {
     const user = await User.findOne({ email }).lean().exec();
 
