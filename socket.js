@@ -39,7 +39,6 @@ module.exports = (server) => {
     });
 
     ws.on("close", () => {
-      console.log("클라이언트와 연결이 끊겼습니다.");
       clearInterval(ws.interval);
     });
 
