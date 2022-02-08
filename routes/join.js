@@ -4,13 +4,13 @@ const router = express.Router();
 const User = require("../models/User");
 
 router.get("/", async function (req, res, next) {
-  const { email } = req.headers;
+  const { email } = req.data;
 
   try {
     const user = await User.findOne({ email }).lean().exec();
-    res.status(201).send(user._id);
+    res.status(201).send({ userId: user._id });
   } catch (err) {
-    next(err)
+    next(err);
   }
 });
 
