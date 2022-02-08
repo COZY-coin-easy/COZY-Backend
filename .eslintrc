@@ -33,6 +33,6 @@
       "allowModules": [],
       "convertPath": null,
       "tryExtensions": [".js", ".json", ".node"]
-  }]
+    }]
   }
 }
