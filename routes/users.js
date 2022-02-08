@@ -4,18 +4,21 @@ const User = require("../models/User");
 
 const verifyToken = require("../middlewares/verifyToken");
 
-router.get("/transactionHistory/:userId", verifyToken, async function (req, res, next) {
-  const { email } = req.user;
+router.get(
+  "/transaction-history/:userid",
+  verifyToken,
+  async function (req, res, next) {
+    const { email } = req.user;
 
-  try {
-    const { transactionHistory } = await User.findOne({ email }).lean.exec();
+    try {
+      const { transactionHistory } = await User.findOne({ email }).lean.exec();
 
-    res.status(200).json({ transactionHistory });
-
-  } catch(err) {
-    next(err);
+      res.status(200).json({ data: transactionHistory });
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 router.post("/candlestick", async function (req, res, next) {
   const { candlestick, email } = req.body.headers;

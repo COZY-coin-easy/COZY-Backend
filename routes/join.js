@@ -21,7 +21,7 @@ router.post("/", async function (req, res, next) {
     const user = await User.findOne({ email }).lean().exec();
 
     if (user) {
-      return res.status(201).send({ result: "이미 등록된 유저입니다."});
+      return res.status(201).send({ result: "이미 등록된 유저입니다." });
     }
 
     await User.create({
