@@ -1,7 +1,6 @@
 const WebSocket = require("ws");
 const axios = require("axios");
 
-// 연결 끊겼을 때 데이터 전송 중지
 module.exports = (server) => {
   const clientWss = new WebSocket.Server({ server });
   let coinInfo = null;
@@ -40,7 +39,6 @@ module.exports = (server) => {
     });
 
     ws.on("close", () => {
-      console.log("클라이언트와 연결이 끊겼습니다.");
       clearInterval(ws.interval);
     });
 
