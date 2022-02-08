@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const subTransactionHistorySchema = new mongoose.Schema({
   id: mongoose.Schema.Types.ObjectId,
   transactionDate: Date,
-  CurrencyName: String,
+  currencyName: String,
   unitsTrade: Number,
   price: Number,
   total: Number,
@@ -16,11 +16,13 @@ const subAssetSchema = new mongoose.Schema({
     require: true,
     default: 10000000,
   },
-  coin: [{
-    type: String,
-    quantity: Number,
-    averagePrice: Number,
-  }],
+  coin: [
+    {
+      type: String,
+      quantity: Number,
+      averagePrice: Number,
+    },
+  ],
 });
 
 const UserSchema = new mongoose.Schema({
@@ -36,11 +38,13 @@ const UserSchema = new mongoose.Schema({
   },
   transactionHistory: [subTransactionHistorySchema],
   asset: subAssetSchema,
-  round: [{
-    initialMoney: Number,
-    fianlMoney: Number,
-    transactionResult: [],
-  }],
+  round: [
+    {
+      initialMoney: Number,
+      fianlMoney: Number,
+      transactionResult: [],
+    },
+  ],
   candlestick: [],
 });
 

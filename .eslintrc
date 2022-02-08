@@ -28,11 +28,11 @@
       {
         "args": "none"
       }
-    ],
-    "node/no-unpublished-require": ["error", {
-      "allowModules": [],
-      "convertPath": null,
-      "tryExtensions": [".js", ".json", ".node"]
-    }]
+    ]
+    // "node/no-unpublished-require": ["error", {
+    //   "allowModules": [],
+    //   "convertPath": null,
+    //   "tryExtensions": [".js", ".json", ".node"]
+    // }]
   }
 }
