@@ -1,7 +1,6 @@
 const WebSocket = require("ws");
 const axios = require("axios");
 
-// 연결 끊겼을 때 데이터 전송 중지
 module.exports = (server) => {
   const clientWss = new WebSocket.Server({ server });
   let coinInfo = null;
