@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const subTransactionHistorySchema = new mongoose.Schema({
   id: mongoose.Schema.Types.ObjectId,
   transactionDate: Date,
-  CurrencyName: String,
+  currencyName: String,
   unitsTrade: Number,
   price: Number,
   total: Number,
