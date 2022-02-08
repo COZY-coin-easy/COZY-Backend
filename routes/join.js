@@ -8,7 +8,7 @@ router.get("/", async function (req, res, next) {
 
   try {
     const user = await User.findOne({ email }).lean().exec();
-    res.status(201).send(user._id);
+    res.status(201).send({ userId: user._id });
   } catch (err) {
     next(err);
   }
