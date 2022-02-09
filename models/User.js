@@ -2,11 +2,26 @@ const mongoose = require("mongoose");
 
 const subTransactionHistorySchema = new mongoose.Schema({
   id: mongoose.Schema.Types.ObjectId,
-  transactionDate: Date,
-  currencyName: String,
-  unitsTrade: Number,
-  price: Number,
-  total: Number,
+  transactionDate: {
+    type: Date,
+    required: true,
+  },
+  currencyName: {
+    type: String,
+    required: true,
+  },
+  unitsTrade: {
+    type: Number,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  total: {
+    type: Number,
+    required: true,
+  },
 });
 
 const subAssetSchema = new mongoose.Schema({
@@ -37,7 +52,7 @@ const subAssetSchema = new mongoose.Schema({
 });
 
 const UserSchema = new mongoose.Schema({
-  userId: mongoose.Schema.Types.ObjectId,
+  id: mongoose.Schema.Types.ObjectId,
   email: {
     type: String,
     unique: true,
@@ -51,8 +66,12 @@ const UserSchema = new mongoose.Schema({
   asset: subAssetSchema,
   round: [
     {
-      initialMoney: Number,
-      fianlMoney: Number,
+      initialMoney: {
+        type: Number,
+      },
+      finalMoney: {
+        type: Number,
+      },
       transactionResult: [],
     },
   ],
