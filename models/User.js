@@ -10,7 +10,7 @@ const subTransactionHistorySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  unitsTrade: {
+  unitsTraded: {
     type: Number,
     required: true,
   },
@@ -39,7 +39,6 @@ const subAssetSchema = new mongoose.Schema({
     {
       currencyName: {
         type: String,
-        required: true,
       },
       quantity: {
         type: Number,
