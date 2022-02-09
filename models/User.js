@@ -10,17 +10,30 @@ const subTransactionHistorySchema = new mongoose.Schema({
 });
 
 const subAssetSchema = new mongoose.Schema({
-  id: mongoose.Schema.Types.ObjectId,
+  id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    unique: true,
+  },
   cash: {
     type: Number,
-    require: true,
+    required: true,
     default: 10000000,
   },
-  coin: [{
-    type: String,
-    quantity: Number,
-    averagePrice: Number,
-  }],
+  coin: [
+    {
+      currencyName: {
+        type: String,
+        required: true,
+      },
+      quantity: {
+        type: Number,
+      },
+      averagePrice: {
+        type: Number,
+      },
+    },
+  ],
 });
 
 const UserSchema = new mongoose.Schema({
@@ -36,11 +49,13 @@ const UserSchema = new mongoose.Schema({
   },
   transactionHistory: [subTransactionHistorySchema],
   asset: subAssetSchema,
-  round: [{
-    initialMoney: Number,
-    fianlMoney: Number,
-    transactionResult: [],
-  }],
+  round: [
+    {
+      initialMoney: Number,
+      fianlMoney: Number,
+      transactionResult: [],
+    },
+  ],
   candlestick: [],
 });
 
