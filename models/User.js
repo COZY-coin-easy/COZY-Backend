@@ -25,9 +25,14 @@ const subTransactionHistorySchema = new mongoose.Schema({
 });
 
 const subAssetSchema = new mongoose.Schema({
-  id: mongoose.Schema.Types.ObjectId,
+  id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    unique: true,
+  },
   cash: {
     type: Number,
+    required: true,
     default: 10000000,
   },
   coin: [
