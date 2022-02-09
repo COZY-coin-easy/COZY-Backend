@@ -5,6 +5,6 @@ const CoinSchema = new mongoose.Schema({
   ticker: [],
 });
 
-const CoinSchema = mongoose.model("Coin", CoinSchema);
+const Coin = mongoose.model("Coin", CoinSchema);
 
 module.exports = Coin;
