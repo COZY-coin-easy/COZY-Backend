@@ -10,7 +10,9 @@ router.get(
     const { email } = req.user;
 
     try {
-      const { transactionHistory } = await User.findOne({ email }).lean.exec();
+      const { transactionHistory } = await User.findOne({ email })
+        .lean()
+        .exec();
 
       res.status(200).json({ data: transactionHistory });
     } catch (err) {
@@ -36,9 +38,21 @@ router.get("/asset/:userid", verifyToken, async function (req, res, next) {
   const { userid } = req.params;
 
   try {
-    const user = await User.findById({ _id: userid }).lean().exec();
+    const { asset } = await User.findById(userid, "asset").lean().exec();
 
-    res.status(200).send({ userAsset: user });
+    res.status(200).json({ asset });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/mypage/:userid", verifyToken, async function (req, res, next) {
+  const { userid } = req.params;
+
+  try {
+    const userInfo = await User.findById(userid).lean().exec();
+
+    res.status(200).send({ userInfo });
   } catch (err) {
     next(err);
   }
