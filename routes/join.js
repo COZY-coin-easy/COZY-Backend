@@ -28,6 +28,9 @@ router.post("/", async function (req, res, next) {
     await User.create({
       email,
       username,
+      asset: {
+        coins: [],
+      },
     });
 
     res.status(201).send({ result: "유저 등록 성공" });
