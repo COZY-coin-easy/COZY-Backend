@@ -38,9 +38,9 @@ router.get("/asset/:userid", verifyToken, async function (req, res, next) {
   const { userid } = req.params;
 
   try {
-    const user = await User.findById({ _id: userid }).lean().exec();
+    const { asset } = await User.findById(userid, "asset").lean().exec();
 
-    res.status(200).send({ userAsset: user });
+    res.status(200).json({ asset });
   } catch (err) {
     next(err);
   }
