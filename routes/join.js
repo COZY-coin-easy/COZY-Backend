@@ -31,6 +31,12 @@ router.post("/", async function (req, res, next) {
       asset: {
         coins: [],
       },
+      round: [
+        {
+          initialMoney: 10000000,
+          finalMoney: 0,
+        },
+      ],
     });
 
     res.status(201).send({ result: "유저 등록 성공" });
