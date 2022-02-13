@@ -1,33 +1,26 @@
 const WebSocket = require("ws");
-const axios = require("axios");
+const wsModule = require("ws");
 
 module.exports = (server) => {
   const clientWss = new WebSocket.Server({ server });
+  const bithumbWs = new wsModule(process.env.BITHUMB_SOCKET_URL);
   let coinInfo = null;
 
-  function getApi() {
-    const myCoin = "ALL";
+  const requestData = {
+    type: "ticker",
+    symbols: ["BTC_KRW", "ETH_KRW"],
+    tickTypes: ["24H"],
+  };
+  const subscribeData = JSON.stringify(requestData);
 
-    const tick = () => {
-      setTimeout(async () => {
-        try {
-          const response = await axios.get(
-            `https://api.bithumb.com/public/ticker/${myCoin}`
-          );
-          if (response.status === 200) {
-            coinInfo = response.data;
-          }
-        } catch (error) {
-          console.error(error);
-        }
+  bithumbWs.onopen = (ws) => {
+    bithumbWs.send(subscribeData);
+  };
 
-        tick();
-      }, 3000);
-    };
-    tick();
-  }
-
-  getApi();
+  bithumbWs.onmessage = (event) => {
+    coinInfo = event.data;
+    console.log("빗썸의 답::", coinInfo);
+  };
 
   clientWss.on("connection", (ws) => {
     ws.on("message", (message) => {
@@ -38,22 +31,16 @@ module.exports = (server) => {
       console.error(error);
     });
 
-    ws.on("close", () => {
-      clearInterval(ws.interval);
-    });
-
     ws.interval = () => {
       setTimeout(() => {
         try {
-          if (ws.readyState === ws.OPEN) {
-            ws.send(JSON.stringify(coinInfo));
-          }
+          ws.send(coinInfo);
         } catch (error) {
           console.error(error);
         }
 
         ws.interval();
-      }, 3000);
+      }, 2000);
     };
 
     ws.interval();
