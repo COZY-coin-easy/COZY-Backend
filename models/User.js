@@ -53,7 +53,7 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     required: true,
   },
-  username: {
+  displayName: {
     type: String,
     required: true,
   },
@@ -70,7 +70,6 @@ const UserSchema = new mongoose.Schema({
       transactionResult: [],
     },
   ],
-  candlestick: [],
 });
 
 const User = mongoose.model("User", UserSchema);
