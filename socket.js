@@ -3,7 +3,7 @@ const wsModule = require("ws");
 
 module.exports = (server) => {
   const clientWss = new WebSocket.Server({ server });
-  const bithumbWs = new wsModule("wss://pubwss.bithumb.com/pub/ws");
+  const bithumbWs = new wsModule(process.env.BITHUMB_SOCKET_URL);
   let coinInfo = null;
 
   const requestData = {
@@ -40,7 +40,7 @@ module.exports = (server) => {
         }
 
         ws.interval();
-      }, 3000);
+      }, 2000);
     };
 
     ws.interval();
