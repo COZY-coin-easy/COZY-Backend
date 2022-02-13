@@ -2,21 +2,22 @@ const express = require("express");
 const router = express.Router();
 
 const User = require("../models/User");
+const verifyToken = require("../middlewares/verifyToken");
 
-router.get("/", async function (req, res, next) {
-  const { email } = req.headers;
+router.get("/", verifyToken, async function (req, res, next) {
+  const { email } = req.user;
 
   try {
     const user = await User.findOne({ email }).lean().exec();
 
-    res.status(201).send({ userId: user._id });
+    res.status(200).send({ user });
   } catch (err) {
     next(err);
   }
 });
 
 router.post("/", async function (req, res, next) {
-  const { email, username } = req.body;
+  const { email, displayName } = req.body;
 
   try {
     const user = await User.findOne({ email }).lean().exec();
@@ -27,7 +28,7 @@ router.post("/", async function (req, res, next) {
 
     await User.create({
       email,
-      username,
+      displayName,
       asset: {
         coins: [],
       },

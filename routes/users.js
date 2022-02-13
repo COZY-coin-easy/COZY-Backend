@@ -3,76 +3,20 @@ const router = express.Router();
 const User = require("../models/User");
 const verifyToken = require("../middlewares/verifyToken");
 
-router.get(
-  "/transaction-history/:userid",
-  verifyToken,
-  async function (req, res, next) {
-    const { email } = req.user;
-
-    try {
-      const { transactionHistory } = await User.findOne({ email })
-        .lean()
-        .exec();
-
-      res.status(200).json({ data: transactionHistory });
-    } catch (err) {
-      next(err);
-    }
-  }
-);
-
-router.post("/candlestick/:userid", async function (req, res, next) {
-  const { userid } = req.params;
-  const { candlestick } = req.body;
-
-  try {
-    await User.findByIdAndUpdate(userid, { candlestick });
-
-    res.status(201).send({ result: "candlestick save success" });
-  } catch (err) {
-    next(err);
-  }
-});
-
-router.get("/asset/:userid", verifyToken, async function (req, res, next) {
-  const { userid } = req.params;
-
-  try {
-    const { asset } = await User.findById(userid, "asset").lean().exec();
-
-    res.status(200).json({ asset });
-  } catch (err) {
-    next(err);
-  }
-});
-
-router.get("/mypage/:userid", verifyToken, async function (req, res, next) {
-  const { userid } = req.params;
-
-  try {
-    const userInfo = await User.findById(userid).lean().exec();
-
-    res.status(200).send({ userInfo });
-  } catch (err) {
-    next(err);
-  }
-});
-
 router.post("/order/:userid", verifyToken, async function (req, res, next) {
+  const { userid } = req.params;
+  const { currencyName, unitsTraded, total } = req.body;
+
   try {
-    const { userid } = req.params;
-    const { currencyName, unitsTraded, total } = req.body;
     const { transactionHistory, asset } = await User.findById(userid)
       .lean()
       .exec();
 
-    delete req.body.authorization;
     const newTransactionHistory = req.body;
     transactionHistory.push(newTransactionHistory);
 
     const userCash = asset.cash;
     const updatedUserCash = userCash + total;
-
     const userCoins = asset.coins;
 
     let coinIndex = null;
@@ -87,7 +31,7 @@ router.post("/order/:userid", verifyToken, async function (req, res, next) {
       const newCoin = {
         currencyName: currencyName,
         quantity: unitsTraded,
-        averagePrice: total / unitsTraded,
+        averagePrice: -total / unitsTraded,
       };
 
       userCoins.push(newCoin);
@@ -101,10 +45,17 @@ router.post("/order/:userid", verifyToken, async function (req, res, next) {
       }).exec();
     } else {
       const updatedQuantity = userCoins[coinIndex].quantity + unitsTraded;
-      const updatedAveragePrice =
-        (userCoins[coinIndex].quantity * userCoins[coinIndex].averagePrice +
-          total) /
-        updatedQuantity;
+
+      let updatedAveragePrice;
+
+      if (updatedQuantity === 0) {
+        updatedAveragePrice = 0;
+      } else {
+        updatedAveragePrice =
+          (userCoins[coinIndex].quantity * userCoins[coinIndex].averagePrice +
+            total) /
+          updatedQuantity;
+      }
 
       userCoins[coinIndex].quantity = updatedQuantity;
       userCoins[coinIndex].averagePrice = updatedAveragePrice;
