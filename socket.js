@@ -31,7 +31,7 @@ module.exports = (server) => {
 
   clientWss.on("connection", (ws) => {
     ws.on("message", (message) => {
-      console.log("클라이언트에서 보내온 메세지:::", message.toString("utf8"));
+      // console.log("클라이언트에서 보내온 메세지:::", message.toString("utf8"));
     });
 
     ws.on("error", (error) => {
