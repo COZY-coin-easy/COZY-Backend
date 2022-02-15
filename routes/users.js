@@ -5,18 +5,25 @@ const verifyToken = require("../middlewares/verifyToken");
 
 router.post("/order/:userid", verifyToken, async function (req, res, next) {
   const { userid } = req.params;
-  const { currencyName, unitsTraded, total } = req.body;
+  const { currencyName, unitsTraded, price, total, isBuy } = req.body;
 
   try {
     const { transactionHistory, asset } = await User.findById(userid)
       .lean()
       .exec();
 
-    const newTransactionHistory = req.body;
+    const newTransactionHistory = {
+      currencyName,
+      unitsTraded,
+      price,
+      total,
+      isBuy,
+    };
+
     transactionHistory.push(newTransactionHistory);
 
     const userCash = asset.cash;
-    const updatedUserCash = userCash + total;
+    const updatedUserCash = userCash + (isBuy ? -total : total);
     const userCoins = asset.coins;
 
     let coinIndex = null;
@@ -31,7 +38,7 @@ router.post("/order/:userid", verifyToken, async function (req, res, next) {
       const newCoin = {
         currencyName: currencyName,
         quantity: unitsTraded,
-        averagePrice: -total / unitsTraded,
+        averagePrice: total / unitsTraded,
       };
 
       userCoins.push(newCoin);
@@ -44,22 +51,23 @@ router.post("/order/:userid", verifyToken, async function (req, res, next) {
         },
       }).exec();
     } else {
-      const updatedQuantity = userCoins[coinIndex].quantity + unitsTraded;
+      const updatedQuantity =
+        userCoins[coinIndex].quantity + (isBuy ? unitsTraded : -unitsTraded);
+      let updatedAveragePrice = 0;
 
-      let updatedAveragePrice;
-
-      if (updatedQuantity === 0) {
-        updatedAveragePrice = 0;
-      } else {
+      if (isBuy) {
         updatedAveragePrice =
           (userCoins[coinIndex].quantity * userCoins[coinIndex].averagePrice +
             total) /
           updatedQuantity;
+      } else {
+        updatedAveragePrice = updatedQuantity
+          ? userCoins[coinIndex].averagePrice
+          : 0;
       }
 
       userCoins[coinIndex].quantity = updatedQuantity;
       userCoins[coinIndex].averagePrice = updatedAveragePrice;
-
       await User.findByIdAndUpdate(userid, {
         transactionHistory: transactionHistory,
         asset: {
