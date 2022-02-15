@@ -22,6 +22,10 @@ const subTransactionHistorySchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  isBuy: {
+    type: Boolean,
+    required: true,
+  },
 });
 
 const subAssetSchema = new mongoose.Schema({
