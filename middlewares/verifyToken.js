@@ -6,7 +6,7 @@ async function verifyToken(req, res, next) {
   const token = req.headers.authorization;
 
   try {
-    const decode = await admin.auth().verifyIdToken(token + "AA");
+    const decode = await admin.auth().verifyIdToken(token);
 
     if (decode) {
       req.user = decode;
