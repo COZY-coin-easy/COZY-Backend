@@ -1,24 +1,20 @@
 const express = require("express");
 const router = express.Router();
+const createError = require("http-errors");
 const User = require("../models/User");
 const verifyToken = require("../middlewares/verifyToken");
+const messages = require("../utils/messages");
 
 router.post("/order/:userid", verifyToken, async function (req, res, next) {
   const { userid } = req.params;
-  const { currencyName, unitsTraded, price, total, isBuy } = req.body;
+  const { currencyName, unitsTraded, total, isBuy } = req.body;
 
   try {
     const { transactionHistory, asset } = await User.findById(userid)
       .lean()
       .exec();
 
-    const newTransactionHistory = {
-      currencyName,
-      unitsTraded,
-      price,
-      total,
-      isBuy,
-    };
+    const newTransactionHistory = req.body;
 
     transactionHistory.push(newTransactionHistory);
 
@@ -77,9 +73,13 @@ router.post("/order/:userid", verifyToken, async function (req, res, next) {
       }).exec();
     }
 
-    res.status(201).send({ result: "거래내역 및 자산 업데이트 성공" });
+    res.status(201).send({ result: messages.ORDER_UPDATE_SUCCESS });
   } catch (err) {
-    next(err);
+    next(
+      createError(500, err, {
+        message: messages.ORDER_UPDATE_FAIL,
+      })
+    );
   }
 });
 
