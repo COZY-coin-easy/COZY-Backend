@@ -7,20 +7,14 @@ const messages = require("../utils/messages");
 
 router.post("/order/:userid", verifyToken, async function (req, res, next) {
   const { userid } = req.params;
-  const { currencyName, unitsTraded, price, total, isBuy } = req.body;
+  const { currencyName, unitsTraded, total, isBuy } = req.body;
 
   try {
     const { transactionHistory, asset } = await User.findById(userid)
       .lean()
       .exec();
 
-    const newTransactionHistory = {
-      currencyName,
-      unitsTraded,
-      price,
-      total,
-      isBuy,
-    };
+    const newTransactionHistory = req.body;
 
     transactionHistory.push(newTransactionHistory);
 
