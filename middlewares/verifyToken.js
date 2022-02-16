@@ -1,20 +1,22 @@
+const createError = require("http-errors");
 const admin = require("../config/firebase");
+const messages = require("../utils/messages");
 
 async function verifyToken(req, res, next) {
   const token = req.headers.authorization;
 
   try {
-    const decode = await admin.auth().verifyIdToken(token);
+    const decode = await admin.auth().verifyIdToken(token + "AA");
 
     if (decode) {
       req.user = decode;
 
       next();
     } else {
-      return res.send({ message: "유효하지 않은 토큰입니다." });
+      next(createError(500, { message: messages.INVALID_TOKEN }));
     }
   } catch (err) {
-    next(err);
+    next(createError(500, err, { message: messages.UNAUTHORIZED_USER }));
   }
 }
 
