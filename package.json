@@ -7,11 +7,6 @@
     "dev": "nodemon ./bin/www",
     "lint": "eslint ./bin/www --fix"
   },
-  "engineStrict": true,
-  "engines": {
-    "node": ">=16.0.0",
-    "npm": ">=8.0.0"
-  },
   "dependencies": {
     "axios": "^0.25.0",
     "cors": "^2.8.5",
