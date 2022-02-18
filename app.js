@@ -9,6 +9,7 @@ mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
 });
 
+const index = require("./routes/index");
 const join = require("./routes/join");
 const users = require("./routes/users");
 
@@ -26,6 +27,7 @@ app.use(express.json({ limit: 5000000 }));
 app.use(express.urlencoded({ limit: 5000000, extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use("/index", index);
 app.use("/", join);
 app.use("/users", users);
 
